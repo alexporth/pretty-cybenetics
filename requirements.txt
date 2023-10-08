@@ -1,1 +1,4 @@
 django
+requests
+beautifulsoup4
+Pillow
