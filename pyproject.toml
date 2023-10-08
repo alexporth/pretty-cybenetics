@@ -1,6 +1,16 @@
+[python]
+name = "pybenetics"
+version = "0.0.1"
+authors = [
+  { name="Alexander Porth", email="alex.porth@gmail.com" },
+]
+description = "Used to display the cybenetics.com information in a more user friendly way"
+requires-python = ">=3.12"
+readme = "README.md"
+
 [tool.ruff]
 target-version = "py312"
-line-length = 150
+line-length = 120
 
 [tool.black]
-line-length = 150
+line-length = 120
