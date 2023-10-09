@@ -22,7 +22,7 @@ class Tag(models.Model):
     name = models.CharField(max_length=200)
 
 
-class PSU(models.Model):
+class PsuEntry(models.Model):
     brand = models.ForeignKey(Brand, on_delete=models.PROTECT)
     name = models.CharField(max_length=200)
     voltage = models.ForeignKey(Voltage, on_delete=models.PROTECT)

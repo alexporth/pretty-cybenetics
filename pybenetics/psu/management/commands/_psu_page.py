@@ -8,7 +8,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
 from common.models import Brand, EfficiencyCertification, NoiseCertification
-from psu.models import PSU, Voltage, Tag, FormFactor, Wattage
+from psu.models import PsuEntry, Voltage, Tag, FormFactor, Wattage
 
 
 class PsuPage:
@@ -64,14 +64,14 @@ class PsuPage:
                     for data_row in rows[3:]:
                         data = data_row.find_all("td")
                         model_name = data[0].text
-                        try:
-                            PSU.objects.get(brand=self.brand, name=model_name)
-                            continue
-                        except PSU.DoesNotExist:
-                            print(f"Creating entry for {brand_name} - {model_name}")
                         voltage_tag_entry = self.tag_voltage_dictionary[tab_number]
-                        voltage = Voltage.objects.get(value=voltage_tag_entry["voltage"])
+                        voltage = Voltage.objects.get_or_create(value=voltage_tag_entry["voltage"])
                         tag = Tag.objects.get_or_create(name=voltage_tag_entry["tag"])
+                        try:
+                            psu = PsuEntry.objects.get(brand=self.brand, name=model_name, voltage=voltage)
+                            continue
+                        except PsuEntry.DoesNotExist:
+                            print(f"Creating entry for {brand_name} - {model_name}")
                         form_factor = FormFactor.objects.get_or_create(name=data[1].text)
                         wattage = Wattage.objects.get_or_create(name=data[2].text)
                         average_efficiency = float(data[3].text)
@@ -89,7 +89,7 @@ class PsuPage:
                             noise_rating = NoiseCertification.objects.get(name=model_noise_rating)
                         date = datetime.date.fromisoformat(data[10].text)
                         short_report, normal_report = self.get_reports(data)
-                        PSU.objects.create(
+                        PsuEntry.objects.create(
                             brand=self.brand,
                             name=model_name,
                             voltage=voltage,

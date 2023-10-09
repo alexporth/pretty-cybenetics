@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Voltage, FormFactor, Wattage, Tag, PSU
+from .models import Voltage, FormFactor, Wattage, Tag, PsuEntry
 
 
 @admin.register(Voltage)
@@ -23,8 +23,8 @@ class TagAdmin(admin.ModelAdmin):
     list_display = ["id", "name"]
 
 
-@admin.register(PSU)
-class PSUAdmin(admin.ModelAdmin):
+@admin.register(PsuEntry)
+class PsuEntryAdmin(admin.ModelAdmin):
     list_display = [
         "brand_name",
         "name",
