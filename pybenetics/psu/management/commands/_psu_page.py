@@ -1,5 +1,6 @@
 import datetime
 import re
+import urllib.parse
 
 from bs4 import BeautifulSoup, Tag as Bs4Tag, ResultSet
 from selenium import webdriver
@@ -64,16 +65,19 @@ class PsuPage:
                     for data_row in rows[3:]:
                         data = data_row.find_all("td")
                         model_name = data[0].text
+                        if model_name == "No records found":
+                            break
                         voltage_tag_entry = self.tag_voltage_dictionary[tab_number]
-                        voltage = Voltage.objects.get_or_create(value=voltage_tag_entry["voltage"])
-                        tag = Tag.objects.get_or_create(name=voltage_tag_entry["tag"])
+                        voltage, created_v = Voltage.objects.get_or_create(value=voltage_tag_entry["voltage"])
+                        tag, created_t = Tag.objects.get_or_create(name=voltage_tag_entry["tag"])
                         try:
-                            psu = PsuEntry.objects.get(brand=self.brand, name=model_name, voltage=voltage)
+                            psu_entry = PsuEntry.objects.get(brand=self.brand, name=model_name, voltage=voltage)
+                            psu_entry.tags.add(tag)
                             continue
                         except PsuEntry.DoesNotExist:
-                            print(f"Creating entry for {brand_name} - {model_name}")
-                        form_factor = FormFactor.objects.get_or_create(name=data[1].text)
-                        wattage = Wattage.objects.get_or_create(name=data[2].text)
+                            print(f"Creating entry for {brand_name} - {model_name} - {voltage.value}")
+                        form_factor, created_f = FormFactor.objects.get_or_create(name=data[1].text)
+                        wattage, created_w = Wattage.objects.get_or_create(value=data[2].text)
                         average_efficiency = float(data[3].text)
                         average_efficiency_5vsb = float(data[4].text)
                         vampire_power = float(data[5].text)
@@ -89,7 +93,7 @@ class PsuPage:
                             noise_rating = NoiseCertification.objects.get(name=model_noise_rating)
                         date = datetime.date.fromisoformat(data[10].text)
                         short_report, normal_report = self.get_reports(data)
-                        PsuEntry.objects.create(
+                        psu_entry = PsuEntry.objects.create(
                             brand=self.brand,
                             name=model_name,
                             voltage=voltage,
@@ -103,18 +107,22 @@ class PsuPage:
                             efficiency_rating=efficiency_rating,
                             noise_rating=noise_rating,
                             date=date,
-                            short_report=short_report,
+                            report_short=short_report,
                             report=normal_report,
                         )
+                        psu_entry.tags.add(tag)
             finally:
-                driver.quit()
+                pass
+        driver.quit()
 
     def get_reports(self, data: ResultSet):
         def get_report(report_link):
             s_report = None
             n_report = None
             if report_link:
-                report_url = self.base_url + report_link.get("href")
+                report_url = urllib.parse.urljoin(self.base_url, report_link.get("href"))
+                if report_url == self.base_url:
+                    return s_report, n_report
                 if report_link.text == "SHORT":
                     s_report = report_url
                 else:
