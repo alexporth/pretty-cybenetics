@@ -24,13 +24,13 @@ class TagAdmin(admin.ModelAdmin):
 
 
 @admin.register(PsuEntry)
-class PsuEntryAdmin(admin.ModelAdmin):
+class PSUAdmin(admin.ModelAdmin):
     list_display = [
         "brand_name",
         "name",
-        "voltage",
+        "voltage_value",
         "form_factor_name",
-        "wattage",
+        "wattage_value",
         "average_efficiency",
         "average_efficiency_5vsb",
         "vampire_power",
@@ -46,9 +46,17 @@ class PsuEntryAdmin(admin.ModelAdmin):
     def brand_name(self, obj):
         return obj.brand.name
 
+    @admin.display(ordering="voltage__value")
+    def voltage_value(self, obj):
+        return obj.voltage.value
+
     @admin.display(ordering="form_factor__name")
     def form_factor_name(self, obj):
         return obj.form_factor.name
+
+    @admin.display(ordering="wattage__value")
+    def wattage_value(self, obj):
+        return obj.wattage.value
 
     @admin.display(ordering="efficiency_rating__name")
     def efficiency_rating_name(self, obj):
