@@ -14,3 +14,9 @@ line-length = 120
 
 [tool.black]
 line-length = 120
+
+[tool.mypy]
+plugins = ["mypy_django_plugin.main"]
+
+[tool.django-stubs]
+django_settings_module = "myproject.settings"
