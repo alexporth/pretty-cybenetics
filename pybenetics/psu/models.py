@@ -9,17 +9,29 @@ PERCENTAGE_VALIDATOR = [MinValueValidator(0), MaxValueValidator(100)]
 class Voltage(models.Model):
     value = models.IntegerField(choices=[(115, "115V"), (230, "230V")])
 
+    def __str__(self):
+        return f"{self.value}"
+
 
 class FormFactor(models.Model):
     name = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.name
 
 
 class Wattage(models.Model):
     value = models.IntegerField()
 
+    def __str__(self):
+        return f"{self.value}"
+
 
 class Tag(models.Model):
     name = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.name
 
 
 class PsuEntry(models.Model):
