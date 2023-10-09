@@ -1,4 +1,4 @@
-from django.core.validators import MinValueValidator, MaxValueValidator, StepValueValidator
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 
 from common.models import Brand, EfficiencyCertification, NoiseCertification
@@ -39,7 +39,7 @@ class PsuEntry(models.Model):
     name = models.CharField(max_length=200)
     voltage = models.ForeignKey(Voltage, on_delete=models.PROTECT)
     form_factor = models.ForeignKey(FormFactor, on_delete=models.PROTECT)
-    wattage = models.ForeignKey(Wattage, on_delete=models.PROTECT, validators=[StepValueValidator(limit_value=50)])
+    wattage = models.ForeignKey(Wattage, on_delete=models.PROTECT)
     average_efficiency = models.DecimalField(max_digits=5, decimal_places=3, validators=PERCENTAGE_VALIDATOR)
     average_efficiency_5vsb = models.DecimalField(max_digits=5, decimal_places=3, validators=PERCENTAGE_VALIDATOR)
     vampire_power = models.DecimalField(max_digits=8, decimal_places=7)
