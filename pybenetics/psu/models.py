@@ -44,7 +44,7 @@ class PsuEntry(models.Model):
     average_efficiency_5vsb = models.DecimalField(max_digits=5, decimal_places=3, validators=PERCENTAGE_VALIDATOR)
     vampire_power = models.DecimalField(max_digits=8, decimal_places=7)
     average_power_factor = models.DecimalField(max_digits=4, decimal_places=3)
-    average_noise_output = models.DecimalField(max_digits=4, decimal_places=2)
+    average_noise_output = models.DecimalField(max_digits=4, decimal_places=2, null=True, blank=True)
     efficiency_rating = models.ForeignKey(EfficiencyCertification, on_delete=models.PROTECT, null=True, blank=True)
     noise_rating = models.ForeignKey(NoiseCertification, on_delete=models.PROTECT, null=True, blank=True)
     tags = models.ManyToManyField(Tag)
