@@ -60,11 +60,11 @@ class PSUAdmin(admin.ModelAdmin):
 
     @admin.display(ordering="efficiency_rating__name")
     def efficiency_rating_name(self, obj):
-        return obj.efficiency_rating.name
+        return obj.efficiency_rating.name if obj.efficiency_rating else ""
 
     @admin.display(ordering="noise_rating__name")
     def noise_rating_name(self, obj):
-        return obj.noise_rating.name
+        return obj.noise_rating.name if obj.noise_rating else ""
 
     @admin.display(ordering="tags__name")
     def get_tags(self, obj):
