@@ -82,7 +82,8 @@ class PsuPage:
                         average_efficiency_5vsb = float(data[4].text)
                         vampire_power = float(data[5].text)
                         average_power_factor = float(data[6].text)
-                        average_noise_output = float(data[7].text)
+                        ano = data[7].text
+                        average_noise_output = None if ano == "-" else float(ano)
                         model_efficiency_rating = data[8].text
                         efficiency_rating = None
                         if model_efficiency_rating:
@@ -91,7 +92,10 @@ class PsuPage:
                         noise_rating = None
                         if model_noise_rating:
                             noise_rating = NoiseCertification.objects.get(name=model_noise_rating)
-                        date = datetime.date.fromisoformat(data[10].text)
+                        date_text = data[10].text
+                        if date_text.split("-")[-1] == "00":
+                            date_text = date_text.replace("00", "01")
+                        date = datetime.date.fromisoformat(date_text)
                         short_report, normal_report = self.get_reports(data)
                         psu_entry = PsuEntry.objects.create(
                             brand=self.brand,
