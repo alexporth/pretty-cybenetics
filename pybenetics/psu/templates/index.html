@@ -1,0 +1,32 @@
+<table id="example" class="display" cellspacing="0" width="100%">
+    <thead>
+        <tr>
+        {% for psu_field in psu_fields %}
+            <th>{{ psu_field }}</th>
+        {% endfor %}
+        </tr>
+    </thead>
+    <tfoot>
+        <tr>
+        {% for psu_field in psu_fields %}
+            <th>{{ psu_field }}</th>
+        {% endfor %}
+        </tr>
+    </tfoot>
+    <tbody>
+    {% for psu_entry in psu_entries %}
+    <tr>
+            <td></td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% if psu_entries %}
+    <ul>
+    {% for psu_entry in psu_entries %}
+        <li>{{ psu_entry.brand }} - {{ psu_entry.name }}</li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No polls are available.</p>
+{% endif %}
