@@ -5,7 +5,7 @@ from .models import PsuEntry
 
 
 def index(request):
-    psu_fields = [field.name for field in PsuEntry._meta.get_fields()]
+    psu_fields = [field.name for field in PsuEntry._meta.get_fields() if field.name != "id"]
     psu_entries = PsuEntry.objects.order_by("-brand")
     template = loader.get_template("index.html")
     context = {
