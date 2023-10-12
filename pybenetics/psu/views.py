@@ -1,7 +1,9 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.template import loader
+from django.views.decorators.csrf import csrf_exempt
 
 from .models import PsuEntry
+from .serializers import PsuEntrySerializer
 
 
 def index(request):
@@ -13,3 +15,14 @@ def index(request):
         "psu_entries": psu_entries,
     }
     return HttpResponse(template.render(context, request))
+
+
+@csrf_exempt
+def psu_entry_list(request):
+    """
+    List all PSU entries
+    """
+    if request.method == "GET":
+        snippets = PsuEntry.objects.all()
+        serializer = PsuEntrySerializer(snippets, many=True)
+        return JsonResponse(serializer.data, safe=False)
