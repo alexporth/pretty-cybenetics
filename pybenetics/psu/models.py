@@ -10,7 +10,7 @@ class Voltage(models.Model):
     value = models.IntegerField(choices=[(115, "115V"), (230, "230V")])
 
     def __str__(self):
-        return f"{self.value}"
+        return f"{self.value}V"
 
 
 class FormFactor(models.Model):
@@ -24,7 +24,7 @@ class Wattage(models.Model):
     value = models.IntegerField()
 
     def __str__(self):
-        return f"{self.value}"
+        return f"{self.value}W"
 
 
 class Tag(models.Model):
