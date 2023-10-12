@@ -1,6 +1,6 @@
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse
 from django.template import loader
-from django.views.decorators.csrf import csrf_exempt
+from rest_framework import mixins, generics
 
 from .models import PsuEntry
 from .serializers import PsuEntrySerializer
@@ -17,12 +17,17 @@ def index(request):
     return HttpResponse(template.render(context, request))
 
 
-@csrf_exempt
-def psu_entry_list(request):
-    """
-    List all PSU entries
-    """
-    if request.method == "GET":
-        snippets = PsuEntry.objects.all()
-        serializer = PsuEntrySerializer(snippets, many=True)
-        return JsonResponse(serializer.data, safe=False)
+class PsuEntryList(mixins.ListModelMixin, generics.GenericAPIView):
+    queryset = PsuEntry.objects.all()
+    serializer_class = PsuEntrySerializer
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
+
+
+class PsuEntryDetail(mixins.RetrieveModelMixin, generics.GenericAPIView):
+    queryset = PsuEntry.objects.all()
+    serializer_class = PsuEntrySerializer
+
+    def get(self, request, *args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)
