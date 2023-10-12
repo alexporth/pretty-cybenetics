@@ -1,7 +1,5 @@
 from django.db import models
 
-from pybenetics import settings
-
 
 class Brand(models.Model):
     name = models.CharField(max_length=200)
@@ -23,8 +21,8 @@ class Certification(models.Model):
 
 
 class EfficiencyCertification(Certification):
-    image = models.ImageField(upload_to=settings.MEDIA_URL + "efficiency", blank=True)
+    image = models.ImageField(upload_to="efficiency", blank=True)
 
 
 class NoiseCertification(Certification):
-    image = models.ImageField(upload_to=settings.MEDIA_URL + "noise", blank=True)
+    image = models.ImageField(upload_to="noise", blank=True)
